@@ -1,3 +1,4 @@
+//Use quotes for the npm package
 var mongoose = require('mongoose')
 
 //var assert = require('assert');
