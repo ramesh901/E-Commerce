@@ -1,9 +1,18 @@
 //Give single quote around packages
+var bodyparser = require('body-parser')
 var express = require('express')
 var wagner = require('wagner-core')
+var status = require('http-status');
 require('./product')(wagner)
 
+
 app = express()
+
+app.use(function(req, res, next) {
+    require('./user').findOne({}, function(error, user) { req.user = user; next(); });
+  }
+);
+
 app.get('/category/id/:id',function(req,res) {
  require('./category').findOne({ _id: req.params.id},function(err,docs){
    if(err){
@@ -46,6 +55,51 @@ app.get('/product/id/:id', wagner.invoke(function(Product) {
   }}
 ))
 
+app.use(bodyparser.json());
+
+app.put('/me/cart', function(req, res) {
+    try {
+      var cart = req.body.data.cart;
+    } catch(e) {
+      return res.json({ error: 'No cart specified!' });
+    }
+
+    req.user.data.cart = cart;
+    req.user.save(function(error, user) {
+      if (error) {
+        return res.json({ error: error.toString() })
+      }
+      return res.json({ user: user })
+    });
+  }
+);
+
+app.get('/me', function(req, res) {
+  if (!req.user) {
+    return res.json({ error: 'Not logged in' });
+  }
+
+  req.user.populate(
+    { path: 'data.cart.product', model: 'Product' },
+    handleOne.bind(null, 'user', res));
+});
+
+function handleOne(property, res, error, result) {
+  if (error) {
+    return res.
+      status(status.INTERNAL_SERVER_ERROR).
+      json({ error: error.toString() });
+  }
+  if (!result) {
+    return res.
+      status(status.NOT_FOUND).
+      json({ error: 'Not found' });
+  }
+
+  var json = {};
+  json[property] = result;
+  res.json(json);
+}
 
 app.listen(3002)
 console.log('Listening to port 3002')
