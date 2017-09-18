@@ -2,9 +2,12 @@
   "dependencies": {
     "body-parser": "1.12.4",
     "express": "4.15.2",
+    "express-session": "1.11.2",
     "http-status": "0.1.8",
     "mongoose": "4.11.6",
-    "wagner-core": "0.1.0"
+    "wagner-core": "0.1.0",
+    "passport": "0.2.2",
+    "passport-facebook": "2.0.0"
   },
   "devDependencies": {
     "mocha": "3.5.0"

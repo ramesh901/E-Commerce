@@ -1,9 +1,8 @@
-var mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/test',{useMongoClient: true})
+var mongoose = require('mongoose');
 
-var userSch = {
+module.exports = new mongoose.Schema({
   profile: {
-    user: {
+    username: {
       type: String,
       required: true,
       lowercase: true
@@ -15,10 +14,7 @@ var userSch = {
     }
   },
   data: {
-    oauth: {
-      type: String,
-      required: true
-    },
+    oauth: { type: String, required: true },
     cart: [{
       product: {
         type: mongoose.Schema.Types.ObjectId
@@ -30,11 +26,7 @@ var userSch = {
       }
     }]
   }
-}
+});
 
-var userSchema = new mongoose.Schema(userSch)
-// Insert quotes for the model name and collection while creating model
-var User = mongoose.model('User',userSchema,'users')
-
-module.exports = User
-module.exports.userSch = userSch
+module.exports.set('toObject', { virtuals: true });
+module.exports.set('toJSON', { virtuals: true });
