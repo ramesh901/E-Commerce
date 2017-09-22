@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 module.exports = new mongoose.Schema({
   profile: {
@@ -26,7 +26,7 @@ module.exports = new mongoose.Schema({
       }
     }]
   }
-});
+})
 
-module.exports.set('toObject', { virtuals: true });
-module.exports.set('toJSON', { virtuals: true });
+module.exports.set('toObject', { virtuals: true })
+module.exports.set('toJSON', { virtuals: true })
